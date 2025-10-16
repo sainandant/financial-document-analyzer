@@ -1,0 +1,11 @@
+streamlit
+pandas
+numpy
+spacy
+transformers
+PyPDF2
+plotly
+wordcloud
+matplotlib
+openpyxl
+torch
