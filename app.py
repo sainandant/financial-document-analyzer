@@ -10,6 +10,8 @@ from collections import Counter
 import re
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import subprocess
+import sys
 
 # Page configuration
 st.set_page_config(
@@ -18,9 +20,20 @@ st.set_page_config(
     layout="wide"
 )
 
+# Download spaCy model if not present
+@st.cache_resource
+def download_spacy_model():
+    try:
+        spacy.load("en_core_web_sm")
+    except OSError:
+        st.info("Downloading language model... This will take a minute on first run.")
+        subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
+
 # Load models
 @st.cache_resource
 def load_nlp_models():
+    download_spacy_model()
+    
     # Load spaCy for entity extraction
     nlp = spacy.load("en_core_web_sm")
     
@@ -152,7 +165,7 @@ with st.sidebar:
     st.write("✅ Word Cloud")
 
 # Load models
-with st.spinner("🔄 Loading AI models..."):
+with st.spinner("🔄 Loading AI models... (First run may take 2-3 minutes)"):
     nlp, sentiment_analyzer, summarizer = load_nlp_models()
     st.success("✅ Models loaded!")
 
